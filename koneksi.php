@@ -1,5 +1,5 @@
 <?php 
-$koneksi = mysqli_connect("localhost","root","","db_toko");
+$koneksi = mysqli_connect("localhost","root","","db_lapor");
  
 // Check connection
 if (mysqli_connect_errno()){
