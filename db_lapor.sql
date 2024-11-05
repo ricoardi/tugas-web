@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 01, 2024 at 04:05 AM
+-- Generation Time: Nov 05, 2024 at 08:55 AM
 -- Server version: 5.7.33
 -- PHP Version: 7.4.19
 
@@ -20,6 +20,48 @@ SET time_zone = "+00:00";
 --
 -- Database: `db_lapor`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_kasifikasi`
+--
+
+CREATE TABLE `tb_kasifikasi` (
+  `id_klasifikasi` bigint(20) NOT NULL,
+  `nama_klasifikasi` text NOT NULL,
+  `ket_klasifikasi` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_kategori`
+--
+
+CREATE TABLE `tb_kategori` (
+  `id_kategori` bigint(20) NOT NULL,
+  `nama_kategori` text NOT NULL,
+  `ket_kategori` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tb_laporan`
+--
+
+CREATE TABLE `tb_laporan` (
+  `id_laporan` bigint(20) NOT NULL,
+  `id_klasifikasi` bigint(20) NOT NULL,
+  `judul_laporan` text NOT NULL,
+  `isi_laporan` text NOT NULL,
+  `id_kategori` bigint(20) NOT NULL,
+  `email` text NOT NULL,
+  `no_whatsapp` text NOT NULL,
+  `tanggal_laporan` datetime NOT NULL,
+  `file_pendukung` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -45,6 +87,24 @@ INSERT INTO `tb_user` (`id_user`, `username`, `password`) VALUES
 --
 
 --
+-- Indexes for table `tb_kasifikasi`
+--
+ALTER TABLE `tb_kasifikasi`
+  ADD PRIMARY KEY (`id_klasifikasi`);
+
+--
+-- Indexes for table `tb_kategori`
+--
+ALTER TABLE `tb_kategori`
+  ADD PRIMARY KEY (`id_kategori`);
+
+--
+-- Indexes for table `tb_laporan`
+--
+ALTER TABLE `tb_laporan`
+  ADD PRIMARY KEY (`id_laporan`);
+
+--
 -- Indexes for table `tb_user`
 --
 ALTER TABLE `tb_user`
@@ -53,6 +113,24 @@ ALTER TABLE `tb_user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `tb_kasifikasi`
+--
+ALTER TABLE `tb_kasifikasi`
+  MODIFY `id_klasifikasi` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tb_kategori`
+--
+ALTER TABLE `tb_kategori`
+  MODIFY `id_kategori` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tb_laporan`
+--
+ALTER TABLE `tb_laporan`
+  MODIFY `id_laporan` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tb_user`
