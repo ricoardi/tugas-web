@@ -1,17 +1,30 @@
 <!-- php -S localhost:8000  -->
 <!DOCTYPE html>
+<?php
+  include 'koneksi.php';
+
+    $query = "SELECT * FROM `tb_klasifikasi`";
+    $result = mysqli_query($koneksi, $query);
+
+    $kategori = mysqli_query($koneksi, "SELECT * FROM `tb_kategori`");
+
+    // $result = mysqli_fetch_assoc($sql);
+
+    // var_dump($kategori);
+    // die();
+?>
 <html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Index - Rapid Bootstrap Template</title>
+  <title>Ayo Lapor</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="../assets/landingpage/img/favicon.png" rel="icon">
-  <link href="../assets/landingpage/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="../logounpra.png" rel="icon">
+  <link href="../logounpra.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -176,7 +189,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Form Laporan</h2>
-        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+        <p>Sampaikan Laporan Anda</p>
       </div><!-- End Section Title -->
 
       <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
@@ -184,34 +197,75 @@
         <div class="row gy-4">
 
           <div class="col-lg-12">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="500">
+            <form action="kirim_laporan.php" method="POST" enctype="multipart/form-data" class="php-form" data-aos="fade-up" data-aos-delay="500">
               <div class="row gy-4">
 
+                <div class="col-md-12">
+                  <select name="id_klasifikasi" class="form-control" required>
+                  <option value="">Pilih Klasifikasi Laporan</option> 
+                  <?php 
+                    while ($data = mysqli_fetch_array(
+                          $result,MYSQLI_ASSOC)):; 
+                  ?>
+                  <option value="<?php echo $data["id_klasifikasi"];?>">
+                  <?php echo $data["nama_klasifikasi"];
+                  ?>
+                  </option>
+                  <?php 
+                    endwhile; 
+                  ?>
+                  </select>
+                </div>
+
+                <div class="col-md-12 ">
+                  <input type="judul_laporan" class="form-control" name="judul_laporan" placeholder="Masukkan Judul Laporan Anda" required="">
+                </div>
+
+                <div class="col-md-12">
+                  <textarea class="form-control" name="isi_laporan" rows="6" placeholder="Masukkan Isi Laporan Anda" required=""></textarea>
+                </div>
+
+                <div class="col-md-12">
+                  <select name="id_kategori" class="form-control" required>
+                  <option value="">Pilih Kategori Laporan</option> 
+                  <?php 
+                    while ($dataa = mysqli_fetch_array(
+                          $kategori,MYSQLI_ASSOC)):; 
+                  ?>
+                  <option value="<?php echo $dataa["id_kategori"];?>">
+                  <?php echo $dataa["nama_kategori"];
+                  ?>
+                  </option>
+                  <?php 
+                    endwhile; 
+                  ?>
+                  </select>
+                </div>
+
+                <div class="col-md-6 ">
+                  <input type="email" class="form-control" name="email" placeholder="Masukkan Email Anda" required="">
+                </div>
+
                 <div class="col-md-6">
-                  <input type="text" name="judul" class="form-control" placeholder="Your Name" required="">
+                  <input type="text" class="form-control" name="no_whatsapp" placeholder="Masukkan Nomor Whatsapp" required="">
                 </div>
 
                 <div class="col-md-6 ">
-                  <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
-                </div>
-                <div class="col-md-6 ">
-                  <input type="file" class="form-control" name="email" placeholder="Your Email" required="">
+                  <p>Tanggal Kejadian</p>
+                  <input type="date" class="form-control" name="tanggal_kejadian" required="">
                 </div>
 
-                <div class="col-md-12">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
-                </div>
-
-                <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                <div class="col-md-6">
+                  <p>File Pendukung</p>
+                  <input type="file" class="form-control" name="file_pendukung" placeholder="Masukkan File Pendukung" required="" accept="image/*,.pdf,.doc,docx">
                 </div>
 
                 <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                  <!-- <div class="loading">Loading</div> -->
+                  <!-- <div class="error-message"></div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div> -->
 
-                  <button type="submit">Send Message</button>
+                  <button type="submit">Kirim</button>
                 </div>
 
               </div>
@@ -233,9 +287,9 @@
         <div class="col-lg-4 col-md-6 d-flex">
           <i class="bi bi-geo-alt icon"></i>
           <div class="address">
-            <h4>Address</h4>
-            <p>A108 Adam Street</p>
-            <p>New York, NY 535022</p>
+            <h4>Alamat</h4>
+            <p>Jalan Patra No. 50, Sukaraja Kecamatan Prabumulih Selatan,</p>
+            <p>Kota Prabumulih, Sumatera Selatan, 31111</p>
             <p></p>
           </div>
 
@@ -266,10 +320,10 @@
         <div class="col-lg-4 col-md-6">
           <h4>Follow Us</h4>
           <div class="social-links d-flex">
-            <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
-            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            <!-- <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a> -->
+            <!-- <a href="#" class="facebook"><i class="bi bi-facebook"></i></a> -->
+            <a href="https://www.instagram.com/universitas_prabumulih/" class="instagram"><i class="bi bi-instagram"></i></a>
+            <!-- <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a> -->
           </div>
         </div>
 
