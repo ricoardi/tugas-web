@@ -1,5 +1,5 @@
 <?php
-include 'koneksi.php';
+include 'koneksi_login.php';
 
     $id_klasifikasi = $_POST['id_klasifikasi'];
     $judul_laporan = $_POST['judul_laporan'];

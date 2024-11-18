@@ -1,9 +1,21 @@
+<?php
+      include 'koneksi.php';
+
+      $query = "SELECT * FROM tb_laporan JOIN tb_klasifikasi ON tb_klasifikasi.id_klasifikasi = tb_laporan.id_klasifikasi";
+      $sql = mysqli_query($conn, $query);
+      $no = 1;
+?>
+<!-- php -S localhost:8000 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Admin</title>
+
+  <!-- Favicons -->
+  <link href="../logounpra.png" rel="icon">
+  <link href="../logounpra.png" rel="apple-touch-icon">
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -25,6 +37,9 @@
   <link rel="stylesheet" href="../assets/adminpage/plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="../assets/adminpage/plugins/summernote/summernote-bs4.min.css">
+  <link rel="stylesheet" href="../assets/adminpage/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="../assets/adminpage/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="../assets/adminpage/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -105,7 +120,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="index.php" class="nav-link">
               <i class="fas fa-copy nav-icon"></i>
               <p>Dashboard</p>
             </a>
@@ -180,7 +195,6 @@
               <p>Kategori</p>
             </a>
           </li>
-          
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -199,8 +213,8 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
+              <li class="breadcrumb-item"><a href="#">Admin</a></li>
+              <li class="breadcrumb-item active">Laporan</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -211,85 +225,96 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
-
-                <p>New Orders</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Data Laporan</h3>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                <p>Bounce Rate</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
+          <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th><center>No.</center></th>
+                  <th>Klasifikasi</th>
+                  <th>Judul Laporan</th>
+                  <th>File Pendukung</th>
+                  <th>Tanggal Laporan</th>
+                  <th><center>Status</center></th>
+                  <th><center>Aksi</center></th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                  while ($result = mysqli_fetch_assoc($sql)) {
+                ?>
+                <tr>
+                  <td>
+                    <center><?php echo $no++; ?></center>
+                  </td>
+                  <td><?php echo $result['nama_klasifikasi']; ?></td>
+                  <td><?php echo $result['judul_laporan']; ?></td>
+                  <td>
+                    <?php if($result['file_pendukung']){ ?>
+                      <a type="button" class="btn btn-warning btn-sm" href="../assets/files/<?php echo $result['file_pendukung']; ?>" target="_blank">Lihat File Pendukung</a>
+                    <?php } ?>
+                  </td>
+                  <td><?php echo $result['tanggal_laporan']; ?></td>
+                  <td>
+                    <?php if ($result['status'] == "0" ){  ?>
+                      <div class="small-box bg-info">
+                        <div class="inner">
+                          <p>Ubah Status Laporan</p>
+                        </div> 
+                      </div>
+                      <a href="kelola.php?ubah=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm"><i class="fas fa-check-circle"> Valid</i></a>
+                      <a href="kelola.php?ubah=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Tidak Valid</i></a>
+                    <?php }else if($result['status'] == "1" ){  ?>
+                      <div class="small-box bg-success">
+                        <div class="inner">
+                          <p>Status Laporan Valid</p>
+                        </div> 
+                      </div>
+                    <?php }else{  ?>
+                      <div class="small-box bg-danger">
+                        <div class="inner">
+                          <p>Status Laporan Tidak Valid</p>
+                        </div> 
+                      </div>
+                    <?php } ?>
+                  </td>
+                  <td>
+                    <?php if ($result['created_by'] == "admin" ){  ?>
+                      <a href="kelola.php?ubah=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"> Ubah</i></a> <br><br>
+                      <a href="proses.php?hapus=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm" onClick="return confirm('Apakah anda yakin ingin menghapus data tersebut?')"><i class="fas fa-trash-alt"> Hapus</i></a>
+                    <?php  }else{ ?>
+                      <a type="button" class="btn btn-secondary btn-sm" title="Admin Hanya dapat Mengubah dan Menghapus Laporan Yang Dibuat Admin Sendiri"><i class="fas fa-times-circle"> Tidak Ada Akses</i></a>
+                    <?php } ?>
+                  </td>
+                </tr>
+              <?php } ?>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th><center>No.</center></th>
+                  <th>Klasifikasi</th>
+                  <th>Judul Laporan</th>
+                  <th>File Pendukung</th>
+                  <th>Tanggal Laporan</th>
+                  <th><center>Status</center></th>
+                  <th><center>Aksi</center></th>
+                </tr>
+              </tfoot>
+            </table>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
-
-                <p>User Registrations</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
-
-                <p>Unique Visitors</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
         </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-          
-        </div>
-        <!-- /.row (main row) -->
-      </div><!-- /.container-fluid -->
+      </div>
     </section>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
+  
   <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
+    <strong>Sistem Laporan Mahasiswa.</strong>
+   
     <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.2.0
+      <b>Version</b> Beta
     </div>
   </footer>
 
@@ -301,39 +326,44 @@
 </div>
 <!-- ./wrapper -->
 
+
 <!-- jQuery -->
 <script src="../assets/adminpage/plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="../assets/adminpage/plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
 <!-- Bootstrap 4 -->
 <script src="../assets/adminpage/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
-<script src="../assets/adminpage/plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
-<script src="../assets/adminpage/plugins/sparklines/sparkline.js"></script>
-<!-- JQVMap -->
-<script src="../assets/adminpage/plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="../assets/adminpage/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="../assets/adminpage/plugins/jquery-knob/jquery.knob.min.js"></script>
-<!-- daterangepicker -->
-<script src="../assets/adminpage/plugins/moment/moment.min.js"></script>
-<script src="../assets/adminpage/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="../assets/adminpage/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Summernote -->
-<script src="../assets/adminpage/plugins/summernote/summernote-bs4.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="../assets/adminpage/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../assets/adminpage/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../assets/adminpage/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../assets/adminpage/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../assets/adminpage/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../assets/adminpage/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../assets/adminpage/plugins/jszip/jszip.min.js"></script>
+<script src="../assets/adminpage/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../assets/adminpage/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- AdminLTE App -->
-<script src="../assets/adminpage/dist/js/adminlte.js"></script>
-<!-- AdminLTE for demo purposes -->
-<!-- <script src="../assets/adminpage/dist/js/demo.js"></script> -->
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="../assets/adminpage/dist/js/pages/dashboard.js"></script>
+<script src="../assets/adminpage/dist/js/adminlte.min.js"></script>
+<!-- Page specific script -->
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
+  });
+</script>
 </body>
 </html>
+            
