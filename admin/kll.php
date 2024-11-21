@@ -8,7 +8,13 @@
 
     $id_laporan = '';
     $id_klasifikasi = '';
+    $id_kategori = '';
     $judul_laporan = '';
+    $isi_laporan = '';
+    $email = '';
+    $no_whatsapp = '';
+    $tanggal_kejadian = '';
+    $file_pendukung = '';
 
     if (isset($_GET['ubahlaporan'])) {
         $id_laporan = $_GET['ubahlaporan'];
@@ -20,7 +26,13 @@
 
         $id_laporan = $result['id_laporan'];
         $id_klasifikasi = $result['id_klasifikasi'];
+        $id_kategori = $result['id_kategori'];
         $judul_laporan = $result['judul_laporan'];
+        $isi_laporan = $result['isi_laporan'];
+        $email = $result['email'];
+        $no_whatsapp = $result['no_whatsapp'];
+        $tanggal_kejadian = $result['tanggal_kejadian'];
+        $file_pendukung = $result['file_pendukung'];
         
     }
 ?>
@@ -153,117 +165,91 @@
           </div>
           <div class="card-body">
             <div class="container">
-                <form method="POST" action="proseslaporan.php" enctype="multipart/form-data">
+              <form method="POST" action="proseslaporan.php" enctype="multipart/form-data">
+                <input type="hidden" value="<?= $id_laporan; ?>" name="id_laporan">
+                <div class="mb-3 row">
+                  <label for="id_klasifikasi" class="col-sm-3 col-form-label">Pilih Klasifikasi</label>
+                  <div class="col-sm-9">
+                    <select name="id_klasifikasi" class="form-control" required>
+                      <option value="">Pilih Klasifikasi Laporan</option> 
+                      <?php while ($data = mysqli_fetch_array($results,MYSQLI_ASSOC)):; ?>
+                      <option <?php if ($id_klasifikasi != '' && $data["id_klasifikasi"] == $id_klasifikasi ) { echo "selected";} ?> 
+                        value="<?php echo $data["id_klasifikasi"];?>"> <?php echo $data["nama_klasifikasi"];?></option>
+                      <?php endwhile; ?>
+                    </select>
+                  </div>
+                </div>
+              
+                <div class="mb-3 row">
+                  <label for="judul_laporan" class="col-sm-3 col-form-label">Judul Laporan</label>
+                  <div class="col-sm-9">
+                    <input value="<?= $judul_laporan; ?>" required type="text" name="judul_laporan" class="form-control" id="judul_laporan" placeholder="Judul Laporan" />
+                  </div>
+                </div>
+                    
+                <div class="mb-3 row">
+                  <label for="isi_laporan" class="col-sm-3 col-form-label">Isi Laporan</label>
+                  <div class="col-sm-9">
+                    <textarea required name="isi_laporan" class="form-control" id="isi_laporan" rows="3" placeholder="Ex: Ini adalah runtut kejadian ..."><?= $isi_laporan; ?></textarea>
+                  </div>
+                </div>
 
-                    <input type="hidden" value="<?= $id_laporan; ?>" name="id_laporan">
+                <div class="mb-3 row">
+                  <label for="id_kategori" class="col-sm-3 col-form-label">Pilih Kategori</label>
+                  <div class="col-sm-9">
+                    <select name="id_kategori" class="form-control" required>
+                      <option value="">Pilih Kategori Laporan</option> 
+                      <?php  while ($datas = mysqli_fetch_array($kategori,MYSQLI_ASSOC)):; ?>
+                      <option <?php if ($id_kategori != '' && $datas["id_kategori"] == $id_kategori ) { echo "selected";} ?>
+                        value="<?php echo $datas["id_kategori"];?>">
+                      <?php echo $datas["nama_kategori"]; ?>
+                      </option>
+                      <?php endwhile; ?>
+                    </select>
+                  </div>
+                </div>
 
-                    <div class="mb-3 row">
-                        <label for="id_klasifikasi" class="col-sm-2 col-form-label">Pilih Klasifikasi</label>
-                        <div class="col-sm-10">
-                        <select name="id_klasifikasi" class="form-control" required>
-                            <option value="">Pilih Klasifikasi Laporan</option> 
-                            <?php 
-                                while ($data = mysqli_fetch_array(
-                                    $results,MYSQLI_ASSOC)):; 
-                            ?>
-                            <option value="<?php echo $data["id_klasifikasi"];?>">
-                            <?php echo $data["nama_klasifikasi"];
-                            ?>
-                            </option>
-                            <?php 
-                                endwhile; 
-                            ?>
-                        </select>
-                        </div>
-                    </div>
+                <div class="mb-3 row">
+                  <label for="email" class="col-sm-3 col-form-label">Email</label>
+                  <div class="col-sm-9">
+                    <input value="<?= $email; ?>" required type="email" name="email" class="form-control" id="email" placeholder="zzzzz@gmail.com" />
+                  </div>
+                </div>
 
-                    <div class="mb-3 row">
-                    <label for="judul_laporan" class="col-sm-2 col-form-label">Judul Laporan</label>
-                    <div class="col-sm-10">
-                        <input value="<?= $judul_laporan; ?>" required type="text" name="judul_laporan" class="form-control" id="judul_laporan" placeholder="Judul Laporan" />
-                    </div>
-                    </div>
+                <div class="mb-3 row">
+                  <label for="no_whatsapp" class="col-sm-3 col-form-label">Nomor Whatsapp</label>
+                  <div class="col-sm-9">
+                    <input value="<?= $no_whatsapp; ?>" required type="text" name="no_whatsapp" class="form-control" id="no_whatsapp" placeholder="08...." />
+                  </div>
+                </div>
 
+                <div class="mb-3 row">
+                  <label for="tanggal_kejadian" class="col-sm-3 col-form-label">Tanggal Kejadian</label>
+                  <div class="col-sm-9">
+                    <input value="<?= $tanggal_kejadian; ?>" required type="date" name="tanggal_kejadian" class="form-control" id="tanggal_kejadian" placeholder="" />
+                  </div>
+                </div>
 
-                    <div class="mb-3 row">
-                        <label for="id_kategori" class="col-sm-2 col-form-label">Pilih Kategori</label>
-                        <div class="col-sm-10">
-                        <select name="id_kategori" class="form-control" required>
-                            <option value="">Pilih Kategori Laporan</option> 
-                            <?php 
-                                while ($datas = mysqli_fetch_array(
-                                    $kategori,MYSQLI_ASSOC)):; 
-                            ?>
-                            <option value="<?php echo $datas["id_kategori"];?>">
-                            <?php echo $datas["nama_kategori"];
-                            ?>
-                            </option>
-                            <?php 
-                                endwhile; 
-                            ?>
-                        </select>
-                        </div>
-                    </div>
-
-                    <!-- <div class="mb-3 row">
-                        <label for="id_klasifikasi" class="col-sm-2 col-form-label">Jenis Klasifikasi</label>
-                        <div class="col-sm-10">
-                            <select required name="id_klasifikasi" id="id_klasifikasi" class="form-select">
-                            <option <?php if ($id_klasifikasi == '1') {
-                                        echo "selected";
-                                    } ?> value="1">Laki-laki</option>
-                            <option <?php if ($id_klasifikasi == '2') {
-                                        echo "selected";
-                                    } ?> value="2">Perempuan</option>
-                            </select>
-                        </div>
-                    </div> -->
-
-                    <!-- <div class="mb-3 row">
-                    <label for="nisn" class="col-sm-2 col-form-label">NISN</label>
-                    <div class="col-sm-10">
-                        <input required type="text" name="nisn" class="form-control" id="nisn" placeholder="Ex: 112233" value="<?= $nisn; ?>" />
-                    </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                    <label for="nama" class="col-sm-2 col-form-label">Nama laporan</label>
-                    <div class="col-sm-10">
-                        <input value="<?= $nama_laporan; ?>" required type="text" name="nama_laporan" class="form-control" id="nama" placeholder="Ex: Alexander" />
-                    </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                    <label for="foto" class="col-sm-2 col-form-label">Foto Siswa</label>
-                    <div class="col-sm-10">
-                        <input <?php if (!isset($_GET['ubah'])) {
-                                echo "required";
-                                } ?> type="file" name="foto" class="form-control" id="foto" accept="image/*" />
-                    </div>
-                    </div>
-
-                    <div class="mb-3 row">
-                    <label for="alamat" class="col-sm-2 col-form-label">Alamat</label>
-                    <div class="col-sm-10">
-                        <textarea required name="alamat" class="form-control" id="alamat" rows="3" placeholder="Ex: Jln. Sudirman..."><?= $alamat; ?></textarea>
-                    </div>
-                    </div>
-
-                    <div class="mb-3 row mt-4">
-                    <div class="col">
-
-                        <?php if (isset($_GET['ubah'])) { ?>
-                        <button type="submit" name="aksi" value="edit" class="btn btn-primary"><i class="fa fa-save" aria-hidden="true"></i> Simpan Perubahan</button>
-                        <?php
-                        } else {
-                        ?>
-                        <button type="submit" name="aksi" value="add" class="btn btn-primary"><i class="fa fa-save" aria-hidden="true"></i> Tambahkan</button>
-                        <?php } ?>
-
-                        <a href="index.php" type="button" class="btn btn-danger"><i class="fa fa-reply" aria-hidden="true"></i> Batal</a>
-                    </div>
-                    </div> -->
-                </form>
+                <div class="mb-3 row">
+                  <label for="file_pendukung" class="col-sm-3 col-form-label">File Pendukung</label>
+                  <div class="col-sm-9">
+                    <input <?php if (!isset($_GET['ubahlaporan'])) {
+                      echo "required";
+                    } ?> type="file" name="file_pendukung" class="form-control" id="file_pendukung" accept="image/*,.pdf,.doc,docx"/>
+                  </div>
+                </div>
+                
+                <div class="mb-3 row mt-4">
+                  <div class="col">
+                  <?php if (isset($_GET['ubahlaporan'])) { ?>
+                    <button type="submit" name="aksilaporan" value="editlaporan" class="btn btn-primary"><i class="fa fa-save" aria-hidden="true"></i> Simpan Perubahan</button>
+                  <?php } else { ?>
+                    <button type="submit" name="aksilaporan" value="addlaporan" class="btn btn-primary"><i class="fa fa-save" aria-hidden="true"></i> Tambahkan</button>
+                  <?php } ?>
+                    <a href="laporan.php" type="button" class="btn btn-danger"><i class="fa fa-reply" aria-hidden="true"></i> Batal</a>
+                  </div>
+                </div> 
+              </form>
             </div>
           </div>
         </div>
