@@ -39,7 +39,7 @@
   <link rel="stylesheet" href="../assets/adminpage/plugins/summernote/summernote-bs4.min.css">
   <link rel="stylesheet" href="../assets/adminpage/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="../assets/adminpage/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-  <link rel="stylesheet" href="../assets/adminpage/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+  <!-- <link rel="stylesheet" href="../assets/adminpage/plugins/datatables-buttons/css/buttons.bootstrap4.min.css"> -->
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -104,7 +104,7 @@
       </div>
 
       <!-- SidebarSearch Form -->
-      <div class="form-inline">
+      <!-- <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">
           <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
           <div class="input-group-append">
@@ -113,7 +113,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -213,7 +213,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Admin</a></li>
+              <li class="breadcrumb-item"><a href="index.php">Admin</a></li>
               <li class="breadcrumb-item active">Laporan</li>
             </ol>
           </div><!-- /.col -->
@@ -228,6 +228,11 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Data Laporan</h3>
+            
+            <a href="kelolalaporan.php" type="button" class="btn btn-primary mb-3 float-right">
+                        <i class="fa fa-plus"></i>
+                        Tambah Data
+            </a>
           </div>
           <div class="card-body">
             <table id="example1" class="table table-bordered table-striped">
@@ -253,7 +258,7 @@
                   <td><?php echo $result['nama_klasifikasi']; ?></td>
                   <td><?php echo $result['judul_laporan']; ?></td>
                   <td>
-                    <?php if($result['file_pendukung']){ ?>
+                    <?php if($result['file_pendukung'] && file_exists("../assets/files/".$result['file_pendukung']) ){ ?>
                       <a type="button" class="btn btn-warning btn-sm" href="../assets/files/<?php echo $result['file_pendukung']; ?>" target="_blank">Lihat File Pendukung</a>
                     <?php } ?>
                   </td>
@@ -265,26 +270,26 @@
                           <p>Ubah Status Laporan</p>
                         </div> 
                       </div>
-                      <a href="kelola.php?ubah=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm"><i class="fas fa-check-circle"> Valid</i></a>
-                      <a href="kelola.php?ubah=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm"><i class="fas fa-times-circle"></i> Tidak Valid</i></a>
+                      <a href="proseslaporan.php?valid=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm" onClick="return confirm('Apakah anda yakin ingin mengubah status data tersebut menjadi VALID ?')"><i class="fas fa-check-circle"> Valid</i></a>
+                      <a href="proseslaporan.php?notvalid=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm" onClick="return confirm('Apakah anda yakin ingin mengubah status data tersebut menjadi TIDAK VALID ?')"><i class="fas fa-times-circle"></i> Tidak Valid</i></a>
                     <?php }else if($result['status'] == "1" ){  ?>
                       <div class="small-box bg-success">
                         <div class="inner">
-                          <p>Status Laporan Valid</p>
+                          <p>Laporan Valid</p>
                         </div> 
                       </div>
                     <?php }else{  ?>
                       <div class="small-box bg-danger">
                         <div class="inner">
-                          <p>Status Laporan Tidak Valid</p>
+                          <p>Laporan Tidak Valid</p>
                         </div> 
                       </div>
                     <?php } ?>
                   </td>
                   <td>
                     <?php if ($result['created_by'] == "admin" ){  ?>
-                      <a href="kelola.php?ubah=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"> Ubah</i></a> <br><br>
-                      <a href="proses.php?hapus=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm" onClick="return confirm('Apakah anda yakin ingin menghapus data tersebut?')"><i class="fas fa-trash-alt"> Hapus</i></a>
+                      <a href="kelolalaporan.php?ubahlaporan=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"> Ubah</i></a> <br><br>
+                      <a href="proseslaporan.php?hapuslaporan=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm" onClick="return confirm('Apakah anda yakin ingin menghapus data tersebut?')"><i class="fas fa-trash-alt"> Hapus</i></a>
                     <?php  }else{ ?>
                       <a type="button" class="btn btn-secondary btn-sm" title="Admin Hanya dapat Mengubah dan Menghapus Laporan Yang Dibuat Admin Sendiri"><i class="fas fa-times-circle"> Tidak Ada Akses</i></a>
                     <?php } ?>
@@ -337,26 +342,30 @@
 <script src="../assets/adminpage/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="../assets/adminpage/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 <script src="../assets/adminpage/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="../assets/adminpage/plugins/jszip/jszip.min.js"></script>
-<script src="../assets/adminpage/plugins/pdfmake/pdfmake.min.js"></script>
-<script src="../assets/adminpage/plugins/pdfmake/vfs_fonts.js"></script>
-<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- <script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script> -->
+<!-- <script src="../assets/adminpage/plugins/jszip/jszip.min.js"></script>
+<script src="../assets/adminpage/plugins/pdfmake/pdfmake.min.js"></script> -->
+<!-- <script src="../assets/adminpage/plugins/pdfmake/vfs_fonts.js"></script> -->
+<!-- <script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.html5.min.js"></script> -->
+<!-- <script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.print.min.js"></script> -->
+<!-- <script src="../assets/adminpage/plugins/datatables-buttons/js/buttons.colVis.min.js"></script> -->
 <!-- AdminLTE App -->
 <script src="../assets/adminpage/dist/js/adminlte.min.js"></script>
 <!-- Page specific script -->
 <script>
   $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    $('#example2').DataTable({
+    // $("#example1").DataTable({
+    //   "responsive": true, 
+    //   "lengthChange": false, 
+    //   "autoWidth": false,
+
+    //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    $('#example1').DataTable({
       "paging": true,
       "lengthChange": false,
-      "searching": false,
+      "searching": true,
       "ordering": true,
       "info": true,
       "autoWidth": false,
