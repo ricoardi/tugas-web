@@ -1,35 +1,35 @@
 <?php
 include 'fungsilaporan.php';
 
-if (isset($_POST['aksi'])) {
+if (isset($_POST['aksilaporan'])) {
 
-  if ($_POST['aksi'] == "add") {
+  if ($_POST['aksilaporan'] == "addlaporan") {
 
-    $berhasil = tambah_data($_POST, $_FILES);
+    $berhasil = tambah_datalaporan($_POST, $_FILES);
 
     if ($berhasil) {
-      header("location: index.php");
+      header("location: laporan.php");
     } else {
       echo $berhasil;
     }
-  } else if ($_POST['aksi'] == "edit") {
+  } else if ($_POST['aksilaporan'] == "editlaporan") {
 
-    $berhasil = ubah_data($_POST, $_FILES);
+    $berhasil = ubah_datalaporan($_POST, $_FILES);
 
     if ($berhasil) {
-      header("location: index.php");
+      header("location: laporan.php");
     } else {
       echo $berhasil;
     }
   }
 }
 
-if (isset($_GET['hapus'])) {
+if (isset($_GET['hapuslaporan'])) {
 
-  $berhasil = hapus_data($_GET);
+  $berhasil = hapus_datalaporan($_GET);
 
   if ($berhasil) {
-    header("location: index.php");
+    header("location: laporan.php");
   } else {
     echo $berhasil;
   }

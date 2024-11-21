@@ -1,55 +1,80 @@
 <?php
 include 'koneksi.php';
 
-function tambah_data($data, $files)
+function tambah_datalaporan($data, $files)
 {
-  $nisn = $data['nisn'];
-  $nama_siswa = $data['nama_siswa'];
-  $jenis_kelamin = $data['jenis_kelamin'];
-  $foto = $files['foto']['name'];
-  $alamat = $data['alamat'];
 
-  $dir = "../img/";
-  $tmpFile = $files['foto']['tmp_name'];
+  $id_klasifikasi = $data['id_klasifikasi'];
+  $judul_laporan = $data['judul_laporan'];
+  $isi_laporan = $data['isi_laporan'];
+  $id_kategori = $data['id_kategori'];
+  $email = $data['email'];
+  $no_whatsapp = $data['no_whatsapp'];
+  $tanggal_kejadian = $data['tanggal_kejadian'];
+  $status = '1';
+  $created_by = 'admin';
+  $tanggal_laporan = date("Y-m-d H:i:s");
 
-  move_uploaded_file($tmpFile, $dir . $foto);
+  $file_pendukung = $files['file_pendukung']['name'];
 
-  $query = "INSERT INTO tb_siswa VALUE(null, '$nisn', '$nama_siswa', '$jenis_kelamin', '$foto', '$alamat')";
+  $dir = "../assets/files/";
+  $tmpFile = $files['file_pendukung']['tmp_name'];
+
+  move_uploaded_file($tmpFile, $dir . $file_pendukung);
+
+  $query = "INSERT INTO tb_laporan VALUE(null, '$id_klasifikasi', '$judul_laporan', 
+  '$isi_laporan','$id_kategori','$email','$no_whatsapp','$tanggal_laporan','$tanggal_kejadian','$file_pendukung',
+  '$status','$created_by',NULL)";
+
   $sql = mysqli_query($GLOBALS['conn'], $query);
+  // var_dump($sql); exit;
 
-  return true;
+  if ($sql) {
+    echo '<script>alert("Data Sukses Dikirim")</script>';
+    // echo '<div class="alert alert-success alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button><strong> Sukses..!</strong> Data Berhasil Tersimpan.</div>';
+    // header("location: index.php");
+    echo '<meta http-equiv="refresh" content="2;url=laporan.php">';
+  } else {
+      echo $query;
+  }
+  // return true;
 }
 
-function ubah_data($data, $files)
+function ubah_datalaporan($data, $files)
 {
-  $id_siswa = $data['id_siswa'];
-  $nisn = $data['nisn'];
-  $nama_siswa = $data['nama_siswa'];
-  $jenis_kelamin = $data['jenis_kelamin'];
-  $alamat = $data['alamat'];
+  $id_laporan = $data['id_laporan'];
+  $id_klasifikasi = $data['id_klasifikasi'];
+  $judul_laporan = $data['judul_laporan'];
+  $isi_laporan = $data['isi_laporan'];
+  $id_kategori = $data['id_kategori'];
+  $email = $data['email'];
+  $no_whatsapp = $data['no_whatsapp'];
+  $tanggal_kejadian = $data['tanggal_kejadian'];
 
-  $queryShow = "SELECT * FROM tb_siswa WHERE id_siswa='$id_siswa';";
+  $queryShow = "SELECT * FROM tb_laporan WHERE id_laporan='$id_laporan';";
   $sqlShow = mysqli_query($GLOBALS['conn'], $queryShow);
   $result = mysqli_fetch_assoc($sqlShow);
 
-  if ($files['foto']['name'] == "") {
-    $foto = $result['foto_siswa'];
+  if ($files['file_pendukung']['name'] == "") {
+    $file_pendukung = $result['file_pendukung'];
   } else {
-    $foto = $files['foto']['name'];
-    unlink("../img/" . $result['foto_siswa']);
-    move_uploaded_file($files['foto']['tmp_name'], '../img/' . $files['foto']['name']);
+    $file_pendukung = $files['file_pendukung']['name'];
+    unlink("../assets/files/" . $result['file_pendukung']);
+    move_uploaded_file($files['file_pendukung']['tmp_name'], '../assets/files/' . $files['file_pendukung']['name']);
   }
 
-  $query = "UPDATE tb_siswa SET nisn='$nisn', nama_siswa='$nama_siswa', jenis_kelamin='$jenis_kelamin', alamat='$alamat', foto_siswa='$foto' WHERE id_siswa='$id_siswa';";
+  $query = "UPDATE tb_laporan SET id_klasifikasi='$id_klasifikasi', judul_laporan='$judul_laporan', isi_laporan='$isi_laporan', 
+  id_kategori='$id_kategori', email='$email', no_whatsapp='$no_whatsapp', tanggal_kejadian='$tanggal_kejadian', 
+  file_pendukung='$file_pendukung' WHERE id_laporan='$id_laporan';";
 
   $sql = mysqli_query($GLOBALS['conn'], $query);
 
   return true;
 }
 
-function hapus_data($data)
+function hapus_datalaporan($data)
 {
-  $id_siswa = $data['hapus'];
+  $id_siswa = $data['hapuslaporan'];
 
   $queryShow = "SELECT * FROM tb_siswa WHERE id_siswa = '$id_siswa';";
   $sqlShow = mysqli_query($GLOBALS['conn'], $queryShow);

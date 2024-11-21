@@ -1,7 +1,11 @@
 <?php
       include 'koneksi.php';
 
-      $query = "SELECT * FROM tb_laporan JOIN tb_klasifikasi ON tb_klasifikasi.id_klasifikasi = tb_laporan.id_klasifikasi";
+      $query = 
+      "SELECT * FROM tb_laporan 
+      JOIN tb_klasifikasi ON tb_klasifikasi.id_klasifikasi = tb_laporan.id_klasifikasi
+      JOIN tb_kategori ON tb_kategori.id_kategori = tb_laporan.id_kategori
+      ";
       $sql = mysqli_query($conn, $query);
       $no = 1;
 ?>
@@ -240,6 +244,7 @@
                 <tr>
                   <th><center>No.</center></th>
                   <th>Klasifikasi</th>
+                  <th>Kategori</th>
                   <th>Judul Laporan</th>
                   <th>File Pendukung</th>
                   <th>Tanggal Laporan</th>
@@ -256,6 +261,7 @@
                     <center><?php echo $no++; ?></center>
                   </td>
                   <td><?php echo $result['nama_klasifikasi']; ?></td>
+                  <td><?php echo $result['nama_kategori']; ?></td>
                   <td><?php echo $result['judul_laporan']; ?></td>
                   <td>
                     <?php if($result['file_pendukung'] && file_exists("../assets/files/".$result['file_pendukung']) ){ ?>
@@ -291,7 +297,7 @@
                       <a href="kelolalaporan.php?ubahlaporan=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"> Ubah</i></a> <br><br>
                       <a href="proseslaporan.php?hapuslaporan=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm" onClick="return confirm('Apakah anda yakin ingin menghapus data tersebut?')"><i class="fas fa-trash-alt"> Hapus</i></a>
                     <?php  }else{ ?>
-                      <a type="button" class="btn btn-secondary btn-sm" title="Admin Hanya dapat Mengubah dan Menghapus Laporan Yang Dibuat Admin Sendiri"><i class="fas fa-times-circle"> Tidak Ada Akses</i></a>
+                      <a type="button" class="btn btn-secondary btn-sm" title="Admin Hanya dapat Mengubah dan Menghapus Laporan Yang Dibuat Admin Sendiri"><i class="fas fa-times-circle"> Detail</i></a>
                     <?php } ?>
                   </td>
                 </tr>
@@ -301,6 +307,7 @@
                 <tr>
                   <th><center>No.</center></th>
                   <th>Klasifikasi</th>
+                  <th>Kategori</th>
                   <th>Judul Laporan</th>
                   <th>File Pendukung</th>
                   <th>Tanggal Laporan</th>

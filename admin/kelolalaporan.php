@@ -166,7 +166,9 @@
           <div class="card-body">
             <div class="container">
               <form method="POST" action="proseslaporan.php" enctype="multipart/form-data">
+
                 <input type="hidden" value="<?= $id_laporan; ?>" name="id_laporan">
+                
                 <div class="mb-3 row">
                   <label for="id_klasifikasi" class="col-sm-3 col-form-label">Pilih Klasifikasi</label>
                   <div class="col-sm-9">
