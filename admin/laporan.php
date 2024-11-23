@@ -5,6 +5,7 @@
       "SELECT * FROM tb_laporan 
       JOIN tb_klasifikasi ON tb_klasifikasi.id_klasifikasi = tb_laporan.id_klasifikasi
       JOIN tb_kategori ON tb_kategori.id_kategori = tb_laporan.id_kategori
+      WHERE tb_laporan.deleted_at IS NULL
       ";
       $sql = mysqli_query($conn, $query);
       $no = 1;
@@ -65,12 +66,6 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
-      <!-- <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li> -->
     </ul>
 
     <!-- Right navbar links -->
@@ -85,125 +80,50 @@
   </nav>
   <!-- /.navbar -->
 
-  <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-light-primary elevation-4">
-  <!-- <aside class="main-sidebar sidebar-dark-primary elevation-4"> -->
-    <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
       <img src="../logounpra.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">Admin Page</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <!-- <div class="image">
-          <img src="../assets/adminpage/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div> -->
         <div class="info">
-			
           <h4><a href="#" class="d-block">Hi, <?php echo $_SESSION['username']; ?></a></h4>
         </div>
       </div>
 
-      <!-- SidebarSearch Form -->
-      <!-- <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           
           <li class="nav-item">
-            <a href="index.php" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="fas fa-copy nav-icon"></i>
               <p>Dashboard</p>
             </a>
           </li>
-          <!-- <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-circle"></i>
-              <p>
-                Level 1
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Level 2</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Level 2
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="far fa-dot-circle nav-icon"></i>
-                      <p>Level 3</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="far fa-dot-circle nav-icon"></i>
-                      <p>Level 3</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="far fa-dot-circle nav-icon"></i>
-                      <p>Level 3</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Level 2</p>
-                </a>
-              </li>
-            </ul>
-          </li> -->
           <li class="nav-item">
-            <a href="laporan.php" class="nav-link">
-              <i class="fas fa-circle nav-icon"></i>
+            <a href="laporan.php" class="nav-link active">
+            <i class="fas fa-file-signature nav-icon"></i>
               <p>Laporan</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="klasifikasi.php" class="nav-link">
-              <i class="fas fa-circle nav-icon"></i>
+            <i class="fas fa-list-alt nav-icon"></i>
               <p>Klasifikasi</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="kategori.php" class="nav-link">
-              <i class="fas fa-circle nav-icon"></i>
+            <i class="fas fa-layer-group nav-icon"></i>
               <p>Kategori</p>
             </a>
           </li>
+          
         </ul>
       </nav>
-      <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
@@ -297,7 +217,7 @@
                       <a href="kelolalaporan.php?ubahlaporan=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-success btn-sm"><i class="fas fa-pencil-alt"> Ubah</i></a> <br><br>
                       <a href="proseslaporan.php?hapuslaporan=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-danger btn-sm" onClick="return confirm('Apakah anda yakin ingin menghapus data tersebut?')"><i class="fas fa-trash-alt"> Hapus</i></a>
                     <?php  }else{ ?>
-                      <a type="button" class="btn btn-secondary btn-sm" title="Admin Hanya dapat Mengubah dan Menghapus Laporan Yang Dibuat Admin Sendiri"><i class="fas fa-times-circle"> Detail</i></a>
+                      <a href="detaillaporan.php?detaillaporan=<?php echo $result['id_laporan']; ?>" type="button" class="btn btn-secondary btn-sm"><i class="fas fa-info"> Detail</i></a>
                     <?php } ?>
                   </td>
                 </tr>
@@ -324,13 +244,11 @@
   
   <footer class="main-footer">
     <strong>Sistem Laporan Mahasiswa.</strong>
-   
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> Beta
     </div>
   </footer>
 
-  <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
   </aside>

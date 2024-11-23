@@ -15,29 +15,22 @@ function tambah_datalaporan($data, $files)
   $created_by = 'admin';
   $tanggal_laporan = date("Y-m-d H:i:s");
 
-  $file_pendukung = $files['file_pendukung']['name'];
-
-  $dir = "../assets/files/";
-  $tmpFile = $files['file_pendukung']['tmp_name'];
-
-  move_uploaded_file($tmpFile, $dir . $file_pendukung);
+  $temp = explode(".", $_FILES["file_pendukung"]["name"]);
+  $file_pendukung = round(microtime(true)) . '.' . end($temp);
+  move_uploaded_file($_FILES["file_pendukung"]["tmp_name"], "../assets/files/" . $file_pendukung);
 
   $query = "INSERT INTO tb_laporan VALUE(null, '$id_klasifikasi', '$judul_laporan', 
   '$isi_laporan','$id_kategori','$email','$no_whatsapp','$tanggal_laporan','$tanggal_kejadian','$file_pendukung',
   '$status','$created_by',NULL)";
 
   $sql = mysqli_query($GLOBALS['conn'], $query);
-  // var_dump($sql); exit;
 
   if ($sql) {
-    echo '<script>alert("Data Sukses Dikirim")</script>';
-    // echo '<div class="alert alert-success alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button><strong> Sukses..!</strong> Data Berhasil Tersimpan.</div>';
-    // header("location: index.php");
+    echo '<script>alert("Data Sukses Disimpan")</script>';
     echo '<meta http-equiv="refresh" content="2;url=laporan.php">';
   } else {
       echo $query;
   }
-  // return true;
 }
 
 function ubah_datalaporan($data, $files)
@@ -58,9 +51,11 @@ function ubah_datalaporan($data, $files)
   if ($files['file_pendukung']['name'] == "") {
     $file_pendukung = $result['file_pendukung'];
   } else {
-    $file_pendukung = $files['file_pendukung']['name'];
+    $temp = explode(".", $_FILES["file_pendukung"]["name"]);
+    $file_pendukung = round(microtime(true)) . '.' . end($temp);
     unlink("../assets/files/" . $result['file_pendukung']);
-    move_uploaded_file($files['file_pendukung']['tmp_name'], '../assets/files/' . $files['file_pendukung']['name']);
+    move_uploaded_file($_FILES["file_pendukung"]["tmp_name"], "../assets/files/" . $file_pendukung);
+
   }
 
   $query = "UPDATE tb_laporan SET id_klasifikasi='$id_klasifikasi', judul_laporan='$judul_laporan', isi_laporan='$isi_laporan', 
@@ -68,24 +63,40 @@ function ubah_datalaporan($data, $files)
   file_pendukung='$file_pendukung' WHERE id_laporan='$id_laporan';";
 
   $sql = mysqli_query($GLOBALS['conn'], $query);
-
-  return true;
+  if ($sql) {
+    echo '<script>alert("Data Sukses Diubah")</script>';
+    echo '<meta http-equiv="refresh" content="2;url=laporan.php">';
+  } else {
+      echo $query;
+  }
 }
 
 function hapus_datalaporan($data)
 {
-  $id_siswa = $data['hapuslaporan'];
+  $id_laporan = $data['hapuslaporan'];
 
-  $queryShow = "SELECT * FROM tb_siswa WHERE id_siswa = '$id_siswa';";
-  $sqlShow = mysqli_query($GLOBALS['conn'], $queryShow);
-  $result = mysqli_fetch_assoc($sqlShow);
+  // $queryShow = "SELECT * FROM tb_laporan WHERE id_laporan = '$id_laporan';";
+  // $sqlShow = mysqli_query($GLOBALS['conn'], $queryShow);
+  // $result = mysqli_fetch_assoc($sqlShow);
 
-  unlink("../img/" . $result['foto_siswa']);
+  // unlink("../assets/files/" . $result['foto_laporan']);
 
-  $query = "DELETE FROM tb_siswa WHERE id_siswa = '$id_siswa';";
+  // $query = "DELETE FROM tb_laporan WHERE id_laporan = '$id_laporan';";
+
+  $deleted_at = date("Y-m-d H:i:s");
+
+  $query = "UPDATE tb_laporan SET deleted_at='$deleted_at' WHERE id_laporan='$id_laporan';";
+
   $sql = mysqli_query($GLOBALS['conn'], $query);
 
-  return true;
+  if ($sql) {
+    echo '<script>alert("Data Sukses Dihapus")</script>';
+    echo '<meta http-equiv="refresh" content="2;url=laporan.php">';
+  } else {
+      echo $query;
+  }
+
+  // return true;
 }
 
 function valid($data)
