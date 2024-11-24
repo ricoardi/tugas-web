@@ -240,6 +240,19 @@
         </div>
       </div>
     </section>
+    <br>
+    <section class="content">
+      <div class="container-fluid">
+        <div class="card">
+        <br>
+          <center>
+            <a target="_blank" href="exportlaporanxls.php" type="button" class="btn btn-info btn-xl" onClick="return confirm('Apakah anda yakin ingin Mengunduh Rekap Laporan VALID ?')"><i class="fas fa-file-download"> Unduh Laporan Valid</i></a>
+            
+          </center>
+        <br>
+        </div>  
+      </div>
+    </section>
   </div>
   
   <footer class="main-footer">
